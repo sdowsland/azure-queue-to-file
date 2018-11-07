@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Azure/azure-storage-queue-go/2017-07-29/azqueue"
+	"github.com/spf13/viper"
 )
 
 func check(e error) {
@@ -19,9 +20,17 @@ func check(e error) {
 
 func main() {
 
-	accountName := ""
+	viper.SetConfigName("config")         // name of config file (without extension)
+	viper.AddConfigPath("$HOME/.appname") // call multiple times to add many search paths
+	viper.AddConfigPath(".")              // optionally look for config in the working directory
+	err := viper.ReadInConfig()           // Find and read the config file
+	if err != nil {                       // Handle errors reading the config file
+		panic(fmt.Errorf("fatal error config file: %s \n", err))
+	}
 
-	credentials := azqueue.NewSharedKeyCredential(accountName, "")
+	accountName := viper.GetString("accountName")
+
+	credentials := azqueue.NewSharedKeyCredential(accountName, viper.GetString("accountKey"))
 
 	p := azqueue.NewPipeline(credentials, azqueue.PipelineOptions{})
 
@@ -29,7 +38,7 @@ func main() {
 
 	serviceURL := azqueue.NewServiceURL(*u, p)
 
-	queueURL := serviceURL.NewQueueURL("")
+	queueURL := serviceURL.NewQueueURL(viper.GetString("queueName"))
 
 	messagesURL := queueURL.NewMessagesURL()
 
@@ -46,7 +55,7 @@ func main() {
 	intervalCount := 100000
 
 	go func(channel chan string) {
-		f, err := os.Create("output/file.json")
+		f, err := os.Create("output/" + viper.GetString("queueName") + ".json")
 		check(err)
 
 		defer f.Close()

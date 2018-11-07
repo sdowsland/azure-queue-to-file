@@ -1,1 +1,3 @@
-output
+output/*
+!output/.gitkeep
+config.json
