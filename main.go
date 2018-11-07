@@ -52,7 +52,7 @@ func main() {
 	doneWriting := make(chan string)
 
 	doneCount := 0
-	intervalCount := 100000
+	intervalCount := 100
 
 	go func(channel chan string) {
 		f, err := os.Create("output/" + viper.GetString("queueName") + ".json")
@@ -106,11 +106,11 @@ func main() {
 				// (to prevent other servers from dequeuing the same message simultaneously) and update the
 				// message's text (to prevent some successfully-completed processing from re-executing the
 				// next time this message is dequeued):
-				update, err := msgIDURL.Update(ctx, popReceipt, time.Second*20, "updated msg")
-				if err != nil {
-					log.Fatal(err)
-				}
-				popReceipt = update.PopReceipt // Performing any operation on a message ID always requires the most recent pop receipt
+				// update, err := msgIDURL.Update(ctx, popReceipt, time.Second*20, "updated msg")
+				// if err != nil {
+				// 	log.Fatal(err)
+				// }
+				// popReceipt = update.PopReceipt // Performing any operation on a message ID always requires the most recent pop receipt
 
 				// After processing the message, delete it from the queue so it won't be dequeued ever again:
 				_, err = msgIDURL.Delete(ctx, popReceipt)
