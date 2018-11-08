@@ -59,7 +59,9 @@ func main() {
 	go func(channel chan string) {
 		currentTime := time.Now().Local()
 
-		f, err := os.Create("output/" + viper.GetString("queueName") + "-" + currentTime.Format("2006-01-02T15:04:05") + ".json")
+		hostname, err := os.Hostname()
+
+		f, err := os.Create("output/" + viper.GetString("queueName") + "-" + currentTime.Format("2006-01-02T15:04:05") + "-" + hostname + ".json")
 		check(err)
 
 		w := bufio.NewWriter(f)
@@ -88,7 +90,7 @@ func main() {
 
 	}(writeChannel)
 
-	limiter := time.Tick(100 * time.Millisecond)
+	limiter := time.Tick(10 * time.Millisecond)
 
 	// Create goroutines that can process messages in parallel
 	for n := 0; n < concurrentMsgProcessing; n++ {
