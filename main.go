@@ -61,7 +61,7 @@ func main() {
 
 		hostname, err := os.Hostname()
 
-		f, err := os.Create("output/" + viper.GetString("queueName") + "-" + currentTime.Format("2006-01-02T15:04:05") + "-" + hostname + ".json")
+		f, err := os.Create(viper.GetString("dataDirectory") + "/" + viper.GetString("queueName") + "-" + currentTime.Format("2006-01-02T15:04:05") + "-" + hostname + ".json")
 		check(err)
 
 		w := bufio.NewWriter(f)
