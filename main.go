@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"log"
@@ -25,7 +26,7 @@ func main() {
 	viper.AddConfigPath(".")              // optionally look for config in the working directory
 	err := viper.ReadInConfig()           // Find and read the config file
 	if err != nil {                       // Handle errors reading the config file
-		panic(fmt.Errorf("fatal error config file: %s \n", err))
+		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
 
 	accountName := viper.GetString("accountName")
@@ -48,31 +49,42 @@ func main() {
 	msgCh := make(chan *azqueue.DequeuedMessage, concurrentMsgProcessing)
 	const poisonMessageDequeueThreshold = 4
 
-	writeChannel := make(chan string)
+	writeChannel := make(chan string, concurrentMsgProcessing)
 	doneWriting := make(chan string)
 
 	doneCount := 0
 	intervalCount := 100
 
 	go func(channel chan string) {
-		f, err := os.Create("output/" + viper.GetString("queueName") + ".json")
+		currentTime := time.Now().Local()
+
+		f, err := os.Create("output/" + viper.GetString("queueName") + "-" + currentTime.Format("2006-01-02T15:04:05") + ".json")
 		check(err)
 
-		defer f.Close()
+		w := bufio.NewWriter(f)
+
 		for {
 			j, more := <-channel
 
 			if more {
-				f.WriteString(j)
+				w.WriteString(j)
+
+				err = w.Flush() // Don't forget to flush!
+				if err != nil {
+					log.Fatal(err)
+				}
+
 				doneCount = doneCount + 1
 
 				if doneCount%intervalCount == 0 {
 					fmt.Println(doneCount)
 				}
 			} else {
+				f.Close()
 				doneWriting <- "done"
 			}
 		}
+
 	}(writeChannel)
 
 	// Create goroutines that can process messages in parallel
@@ -139,6 +151,8 @@ func main() {
 			// We got some messages, put them in the channel so that many can be processed in parallel:
 			// NOTE: The queue does not guarantee FIFO ordering & processing messages in parallel also does
 			// not preserve FIFO ordering. So, the "Output:" order below is not guaranteed but usually works.
+			fmt.Println(dequeue.NumMessages())
+			fmt.Println(" messages retrieved.")
 			for m := int32(0); m < dequeue.NumMessages(); m++ {
 				msgCh <- dequeue.Message(m)
 				// time.Sleep(time.Second * 100)
