@@ -44,8 +44,8 @@ func main() {
 
 	ctx := context.TODO()
 
-	// doneCount := 0
-	// intervalCount := 100
+	doneCount := 0
+	intervalCount := 1000
 
 	msgQueue := make(chan string)
 
@@ -67,7 +67,11 @@ func main() {
 	log.Println("Starting iter")
 
 	for iter := 0; iter < viper.GetInt("producerCount"); iter++ {
-		log.Println(strconv.Itoa(iter))
+// 		log.Println(strconv.Itoa(iter))
+		doneCount = doneCount + 1
+                if doneCount%intervalCount == 0 {
+		  fmt.Println(doneCount)
+                }
 		msgQueue <- strconv.Itoa(iter)
 	}
 }
