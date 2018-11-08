@@ -66,7 +66,7 @@ func main() {
 
 	log.Println("Starting iter")
 
-	for iter := 0; iter < 5000; iter++ {
+	for iter := 0; iter < viper.GetInt("producerCount"); iter++ {
 		log.Println(strconv.Itoa(iter))
 		msgQueue <- strconv.Itoa(iter)
 	}
