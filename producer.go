@@ -70,7 +70,7 @@ func main() {
 // 		log.Println(strconv.Itoa(iter))
 		doneCount = doneCount + 1
                 if doneCount%intervalCount == 0 {
-		  fmt.Println(doneCount)
+		  log.Println(doneCount)
                 }
 		msgQueue <- strconv.Itoa(iter)
 	}
