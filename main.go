@@ -151,8 +151,8 @@ func main() {
 			// We got some messages, put them in the channel so that many can be processed in parallel:
 			// NOTE: The queue does not guarantee FIFO ordering & processing messages in parallel also does
 			// not preserve FIFO ordering. So, the "Output:" order below is not guaranteed but usually works.
-			fmt.Println(dequeue.NumMessages())
-			fmt.Println(" messages retrieved.")
+			// fmt.Println(dequeue.NumMessages())
+			// fmt.Println(" messages retrieved.")
 			for m := int32(0); m < dequeue.NumMessages(); m++ {
 				msgCh <- dequeue.Message(m)
 				// time.Sleep(time.Second * 100)
