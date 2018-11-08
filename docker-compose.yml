@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    image: queue-to-disk
+    image: azure-queue-to-file
     volumes:
       - "$PWD:/usr/local/app"
     working_dir: /usr/local/app
