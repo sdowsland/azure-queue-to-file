@@ -88,10 +88,14 @@ func main() {
 
 	}(writeChannel)
 
+	limiter := time.Tick(100 * time.Millisecond)
+
 	// Create goroutines that can process messages in parallel
 	for n := 0; n < concurrentMsgProcessing; n++ {
 		go func(msgCh <-chan *azqueue.DequeuedMessage) {
 			for {
+				// Rate limit to prevent rejected connections
+				<-limiter
 				msg := <-msgCh // Get a message from the channel
 
 				// Create a URL allowing you to manipulate this message.
