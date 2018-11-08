@@ -3,6 +3,6 @@ services:
   app:
     image: azure-queue-to-file
     volumes:
-      - "$PWD:/usr/local/app"
+      - $PWD:/usr/local/app
     working_dir: /usr/local/app
     command: go run main.go
