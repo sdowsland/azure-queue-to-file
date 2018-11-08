@@ -59,7 +59,7 @@ func main() {
 				msg := <-msgChan
 				_, err = messagesURL.Enqueue(ctx, payload, time.Second*10, time.Hour*24*7)
 				if err != nil {
-					log.PrintLn(err)
+					log.Println(err)
 					time.Sleep(time.Second * 10)
 					msgChan <- msg
 				}
