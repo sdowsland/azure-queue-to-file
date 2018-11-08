@@ -125,10 +125,7 @@ func main() {
 				// popReceipt = update.PopReceipt // Performing any operation on a message ID always requires the most recent pop receipt
 
 				// After processing the message, delete it from the queue so it won't be dequeued ever again:
-				_, err = msgIDURL.Delete(ctx, popReceipt)
-				if err != nil {
-					log.Fatal(err)
-				}
+				msgIDURL.Delete(ctx, popReceipt)
 				// Loop around to process the next message
 			}
 		}(msgCh)
