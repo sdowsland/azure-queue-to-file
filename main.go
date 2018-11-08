@@ -33,7 +33,8 @@ func main() {
 
 	credentials := azqueue.NewSharedKeyCredential(accountName, viper.GetString("accountKey"))
 
-	p := azqueue.NewPipeline(credentials, azqueue.PipelineOptions{})
+	p := azqueue.NewPipeline(credentials, azqueue.PipelineOptions{
+		Retry: azqueue.RetryOptions{MaxTries: 10}})
 
 	u, _ := url.Parse(fmt.Sprintf("http://%s.queue.core.windows.net", accountName))
 
