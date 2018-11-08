@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Azure/azure-storage-queue-go/2017-07-29/azqueue"
+	"github.com/sdowsland/azure-storage-queue-go/2017-07-29/azqueue"
 	"github.com/spf13/viper"
 )
 
