@@ -67,7 +67,7 @@ func main() {
 			j, more := <-channel
 
 			if more {
-				w.WriteString(j)
+				w.WriteString(j + "\n")
 
 				err = w.Flush() // Don't forget to flush!
 				if err != nil {
