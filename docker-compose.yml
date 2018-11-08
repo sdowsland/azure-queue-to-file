@@ -4,5 +4,6 @@ services:
     image: azure-queue-to-file
     volumes:
       - ./:/usr/local/app
+      - /data-export/output:/data-export/output
     working_dir: /usr/local/app
     command: go run main.go
