@@ -1,5 +1,6 @@
 {
     "accountName": "accountName",
     "accountKey": "accountKey",
-    "queueName": "queueName"
+    "queueName": "queueName",
+    "producerCount": 10
 }
