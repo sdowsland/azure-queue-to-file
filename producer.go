@@ -56,7 +56,7 @@ func main() {
 	for n := 0; n < concurrentMsgProcessing; n++ {
 		go (func(msgChan chan string) {
 			for {
-				msg := <-msgChan
+				<-msgChan
 				_, err = messagesURL.Enqueue(ctx, payload, time.Second*10, time.Hour*24*7)
 				if err != nil {
 					log.Fatal(err)
